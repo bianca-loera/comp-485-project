@@ -1,0 +1,14 @@
+{
+    "java.project.referencedLibraries": [
+        "/Users/biancaloera/comp-485-project/comp-485-project/lib/sqlite-jdbc-3.49.1.0.jar"
+    ],
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    
+    "java.addExports": [
+    "javax.swing",
+    "java.awt"
+],
+}
+
