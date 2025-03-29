@@ -1,26 +1,33 @@
 import java.awt.*;
+import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
 
 public class AddProfileForm extends JFrame {
     JTextField nameField, ipField, subnetField, gatewayField, dnsField;
+    JButton saveBtn, backBtn;
 
     public AddProfileForm() {
         setTitle("Add Network Profile");
-        setSize(400, 350);
+        setSize(400, 370);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
-        getContentPane().setBackground(new Color(207, 10, 44)); // CSUN Red
+        setLocationRelativeTo(null); // Center on screen
+        getContentPane().setBackground(new Color(207, 10, 44));
+        setIconImage(new ImageIcon("csun-logo.png").getImage()); // Optional icon
 
         JLabel title = new JLabel("Add Profile");
-        title.setFont(new Font("Arial", Font.BOLD, 20));
+        title.setFont(new Font("Arial", Font.BOLD, 22));
         title.setForeground(Color.WHITE);
         title.setBounds(130, 10, 200, 30);
         add(title);
 
+        Font labelFont = new Font("Arial", Font.PLAIN, 14);
+
         JLabel nameLbl = new JLabel("Network Name:");
         nameLbl.setForeground(Color.WHITE);
-        nameLbl.setBounds(30, 50, 100, 20);
+        nameLbl.setFont(labelFont);
+        nameLbl.setBounds(30, 50, 120, 20);
         add(nameLbl);
 
         nameField = new JTextField();
@@ -29,7 +36,8 @@ public class AddProfileForm extends JFrame {
 
         JLabel ipLbl = new JLabel("IP Address:");
         ipLbl.setForeground(Color.WHITE);
-        ipLbl.setBounds(30, 80, 100, 20);
+        ipLbl.setFont(labelFont);
+        ipLbl.setBounds(30, 80, 120, 20);
         add(ipLbl);
 
         ipField = new JTextField();
@@ -38,7 +46,8 @@ public class AddProfileForm extends JFrame {
 
         JLabel subnetLbl = new JLabel("Subnet Mask:");
         subnetLbl.setForeground(Color.WHITE);
-        subnetLbl.setBounds(30, 110, 100, 20);
+        subnetLbl.setFont(labelFont);
+        subnetLbl.setBounds(30, 110, 120, 20);
         add(subnetLbl);
 
         subnetField = new JTextField();
@@ -47,7 +56,8 @@ public class AddProfileForm extends JFrame {
 
         JLabel gatewayLbl = new JLabel("Gateway:");
         gatewayLbl.setForeground(Color.WHITE);
-        gatewayLbl.setBounds(30, 140, 100, 20);
+        gatewayLbl.setFont(labelFont);
+        gatewayLbl.setBounds(30, 140, 120, 20);
         add(gatewayLbl);
 
         gatewayField = new JTextField();
@@ -56,23 +66,22 @@ public class AddProfileForm extends JFrame {
 
         JLabel dnsLbl = new JLabel("DNS:");
         dnsLbl.setForeground(Color.WHITE);
-        dnsLbl.setBounds(30, 170, 100, 20);
+        dnsLbl.setFont(labelFont);
+        dnsLbl.setBounds(30, 170, 120, 20);
         add(dnsLbl);
 
         dnsField = new JTextField();
         dnsField.setBounds(150, 170, 200, 20);
         add(dnsField);
 
-        JButton saveBtn = new JButton("Save");
-        saveBtn.setBounds(150, 210, 90, 30);
-        saveBtn.setBackground(Color.WHITE);
-        saveBtn.setForeground(new Color(207, 10, 44));
+        saveBtn = new JButton("Save");
+        saveBtn.setBounds(150, 220, 90, 30);
+        styleButton(saveBtn, true);
         add(saveBtn);
 
-        JButton backBtn = new JButton("Back");
-        backBtn.setBounds(260, 210, 90, 30);
-        backBtn.setBackground(Color.WHITE);
-        backBtn.setForeground(new Color(207, 10, 44));
+        backBtn = new JButton("Back");
+        backBtn.setBounds(260, 220, 90, 30);
+        styleButton(backBtn, false);
         add(backBtn);
 
         saveBtn.addActionListener(e -> saveProfile());
@@ -81,7 +90,31 @@ public class AddProfileForm extends JFrame {
             dispose();
         });
 
+        getRootPane().setDefaultButton(saveBtn);
+        getRootPane().registerKeyboardAction(e -> backBtn.doClick(),
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+
         setVisible(true);
+    }
+
+    private void styleButton(JButton btn, boolean isWhite) {
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Arial", Font.BOLD, 14));
+        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        btn.setContentAreaFilled(true);
+        btn.setOpaque(true);
+        btn.setBackground(isWhite ? Color.WHITE : new Color(207, 10, 44));
+        btn.setForeground(isWhite ? new Color(207, 10, 44) : Color.WHITE);
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(255, 255, 255, 230));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(isWhite ? Color.WHITE : new Color(207, 10, 44));
+            }
+        });
     }
 
     private void saveProfile() {
@@ -96,14 +129,12 @@ public class AddProfileForm extends JFrame {
             pstmt.setString(5, dnsField.getText());
 
             pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Profile saved!");
+            JOptionPane.showMessageDialog(this, "🎉 Profile saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             new MainMenu();
             dispose();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error saving profile.");
+            JOptionPane.showMessageDialog(this, "❌ Error saving profile.", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
 }
-
-

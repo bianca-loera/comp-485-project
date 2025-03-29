@@ -2,7 +2,6 @@ import java.sql.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Ensure DB table exists
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:network_profiles.db")) {
             Statement stmt = conn.createStatement();
             stmt.execute("CREATE TABLE IF NOT EXISTS profiles (" +
@@ -16,7 +15,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Launch app
         new MainMenu();
     }
 }
